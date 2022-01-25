@@ -13,8 +13,8 @@ export const Profile = ({ userData, userSession, handleSignOut }) => {
   const [check, setCheck] = useState(false);
 
   useEffect(() => {
-    axios.get(`https://stacks-node-api.testnet.stacks.co/extended/v1/address/${person._profile.stxAddress.testnet}/nft_events?limit=50`).then((resp) => {
-      const data = resp.data.nft_events
+    axios.get(`https://stacks-node-api.testnet.stacks.co/extended/v1/address/${person._profile.stxAddress.testnet}/assets`).then((resp) => {
+      const data = resp.data.results
       let temp = []
       for (let i = 0; i < data.length; i = i + 1) {
         temp.push(data[i].tx_id)
