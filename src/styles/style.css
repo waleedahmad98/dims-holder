@@ -42,6 +42,30 @@ height: 100%;
 
 }
 
+.btn-md{
+  font-size: medium;
+  padding: 10px 30px 10px 30px;
+
+}
+
+.btn-sm{
+  font-size: small;
+  padding: 5px 30px 5px 30px;
+
+}
+
+.reveal-btn{
+  font-weight: 700;
+  font-size: smaller;
+  border: 0;
+  border-radius: 25px;
+  padding: 5px 30px 5px 30px;
+}
+
+.reveal-btn:hover{
+  background-color: #c4c4c4;
+}
+
 .navbar {
   background-color: #0f0f0f !important;
   -webkit-border-radius: 0;
@@ -70,10 +94,37 @@ height: 100%;
 .content-container {
   margin-top: 2rem;
   padding: 2rem;
-  background-color: #ecedf2;
+  background: rgb(231,231,231);
+  background: linear-gradient(0deg, rgba(231,231,231,1) 0%, rgba(0,212,255,0) 100%); 
   border-radius: 25px;
   line-height: 44px;
   font-weight: 300;
   letter-spacing: -0.04em;
   text-align: left;
+}
+
+.content-card{
+  background-color: #4d41aa !important;
+  color: white;
+  filter: drop-shadow(0px 0px 10px rgb(153, 153, 153));
+}
+
+.content-card:hover{
+  background-color: #3e3392 !important;
+}
+
+.card-btn{
+  border: 0;
+  cursor: pointer;
+  font-size: 70%;
+  font-weight: 700;
+  border-radius: 25px;
+  background-color: white;
+  color: #4d41aa !important;
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+.card-btn:hover{
+  background-color: rgb(211, 211, 211);
 }

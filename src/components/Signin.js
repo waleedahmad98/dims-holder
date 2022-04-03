@@ -57,7 +57,7 @@ export const Signin = () => {
           </div>
         </div>
         <div>
-          <BubbleSVG style={{bottom:0, right: 0, position: "absolute"}}/>
+        <BubbleSVG style={{ bottom: 0, right: 0, position: "absolute" }} />
         </div>
       </div>
 
