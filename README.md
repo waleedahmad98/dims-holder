@@ -1,3 +1,3 @@
-Search Functionality
-Improve UI
-Add Share option
+* Search Functionality
+* Improve UI
+* Add Share option
