@@ -66,6 +66,18 @@ height: 100%;
   background-color: #c4c4c4;
 }
 
+.searchbar{
+  border: 0;
+  background-color: #e9e9ed ;
+  font-size: medium;
+  font-weight: 600;
+  padding: 0px 15px 0px 15px;
+  border-radius: 25px;
+  width: 40%;
+  outline: 0;
+}
+
+
 .navbar {
   background-color: #0f0f0f !important;
   -webkit-border-radius: 0;
@@ -94,9 +106,10 @@ height: 100%;
 .content-container {
   margin-top: 2rem;
   padding: 2rem;
-  background: rgb(231,231,231);
-  background: linear-gradient(0deg, rgba(231,231,231,1) 0%, rgba(0,212,255,0) 100%); 
-  border-radius: 25px;
+  /* background: rgb(231,231,231);
+  background: linear-gradient(0deg, rgba(231,231,231,1) 0%, rgba(0,212,255,0) 100%);  */
+  background-color: #e9e9ed;
+  border-radius: 10px;
   line-height: 44px;
   font-weight: 300;
   letter-spacing: -0.04em;

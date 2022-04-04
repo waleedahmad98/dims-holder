@@ -4,6 +4,7 @@ import {
   Person,
 } from 'blockstack';
 import axios from 'axios';
+import { Document, Page, pdfjs } from 'react-pdf/dist/esm/entry.webpack';
 import { BASE_API_URL, CHAIN_TYPE } from '../config';
 
 export const Profile = ({ userData, userSession, handleSignOut }) => {
@@ -14,12 +15,7 @@ export const Profile = ({ userData, userSession, handleSignOut }) => {
   const [check, setCheck] = useState(false);
   const [stx, setStx] = useState("")
   const [reveal, setReveal] = useState(0)
-
-  const getThumbnails = ()=>{
-    for (let i=0; i<nfts.length; i++){
-      console.log("test", nfts[i])
-    }
-  }
+  const [searchText, setSearchText] = useState("")
 
   useEffect(() => {
     try {
@@ -61,7 +57,6 @@ export const Profile = ({ userData, userSession, handleSignOut }) => {
         }))
       }
       Promise.all(promises).then(() => {
-        console.log(temp)
         setNFTs(temp)
       })
     }
@@ -69,11 +64,11 @@ export const Profile = ({ userData, userSession, handleSignOut }) => {
 
   const getDateTime = (date) => {
     if (date === "")
-        return 'Mining in Progress'
+      return 'Mining in Progress'
     var localDate = new Date(date).toString()
     localDate = localDate.split(" ")
     return `${localDate[1]} ${localDate[2]} ${localDate[3]} (${localDate[4]})`
-}
+  }
 
   return (
     <div className="container">
@@ -83,22 +78,26 @@ export const Profile = ({ userData, userSession, handleSignOut }) => {
           setReveal(0);
 
         }}> {CHAIN_TYPE === "testnet" ? person._profile.stxAddress.testnet : person._profile.stxAddress.mainnet} </button></>}
+        <input className='searchbar' type="text" placeholder='Search transactions' value={searchText} onChange={(e) => {
+          setSearchText(e.target.value)
+        }} />
         <div>
           <button className='reveal-btn' disabled>STX Balance: {stx}</button>
           <button type="button" className='btn1 btn-md ms-2' onClick={handleSignOut}> Sign Out</button>
         </div>
       </div>
       <div className='content-container d-flex flex-column align-items-center'>
-        {nfts.length !== 0 ? <>{console.log(nfts)}{nfts.map(nft => <>
-          <div class="card content-card w-50 mb-5 d-flex flex-row justify-content-start align-items-center">
-            <div>
-              x
-            </div>
+        {nfts.length !== 0 ? <>{nfts.map(nft => <>
+          <div class="card content-card w-50 mb-5">
             <div class="card-body">
-              <h5 class="card-title">{nft.contract_call !== undefined ? nft.contract_call.function_args[2].repr.replace('"', "").replace('"', "") : <></>}</h5>
-              <h6 class="card-subtitle mb-2">{nft.contract_call !== undefined ? <><span style={{ fontWeight: "600", color: "white" }}>Owner Address: </span>{nft.contract_call.function_args[0].repr}</> : <></>}</h6>
-              <h6 class="card-subtitle mb-2" >{nft.sender_address !== undefined ? <><span style={{ fontWeight: "600", color: "white" }}>Sender Address: </span>{nft.sender_address}</> : <></>}</h6>
-              <h6 class="card-subtitle mb-2" >{nft.burn_block_time_iso !== undefined ? <><span style={{ fontWeight: "600", color: "white" }}>Date of Issue: </span>{getDateTime(nft.burn_block_time_iso)}</> : <></>}</h6>
+              <div className='d-flex justify-content-between'>
+                <h5 class="card-title mb-4" style={{ fontWeight: "700" }}>{nft.contract_call !== undefined ? nft.contract_call.function_args[2].repr.replace('"', "").replace('"', "") : <></>}</h5>
+                <div>
+                  <div class="card-subtitle mb-4" >{nft.burn_block_time_iso !== undefined ? <>{getDateTime(nft.burn_block_time_iso)}</> : <></>}</div>
+                </div>
+              </div>
+              <h6 class="card-subtitle mb-4">{nft.contract_call !== undefined ? <><span style={{ fontWeight: "600", color: "white" }}>Owner Address: </span>{nft.contract_call.function_args[0].repr}</> : <></>}</h6>
+              <h6 class="card-subtitle mb-4" >{nft.sender_address !== undefined ? <><span style={{ fontWeight: "600", color: "white" }}>Sender Address: </span>{nft.sender_address}</> : <></>}</h6>
               <div className='d-flex flex-row'>
                 <button className='card-btn me-3' onClick={() => { window.open(`https://explorer.stacks.co/txid/${nft.tx_id}?chain=${CHAIN_TYPE}`, "_blank") }}>DETAILS</button>
                 <button className='card-btn' onClick={() => {
