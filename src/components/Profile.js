@@ -4,18 +4,33 @@ import {
   Person,
 } from 'blockstack';
 import axios from 'axios';
-import { Document, Page, pdfjs } from 'react-pdf/dist/esm/entry.webpack';
+import Fuse from 'fuse.js';
 import { BASE_API_URL, CHAIN_TYPE } from '../config';
 
 export const Profile = ({ userData, userSession, handleSignOut }) => {
   const person = new Person(userData.profile);
   const storage = new Storage({ userSession });
   const [nfts, setNFTs] = useState([]);
+  const [searchedNfts, setSearchedNFTs] = useState([]);
   const [txids, setTxids] = useState([]);
   const [check, setCheck] = useState(false);
   const [stx, setStx] = useState("")
   const [reveal, setReveal] = useState(0)
   const [searchText, setSearchText] = useState("")
+
+  const fuzzySearch = (query) => {
+    if (query === "") {
+      setNFTs(searchedNfts);
+    }
+    else {
+      const fuse = new Fuse(nfts, {
+        keys: ["contract_call.function_args.repr"]
+      });
+      const result = fuse.search(query);
+      console.log(result)
+      setNFTs(result.map(r => { return r.item }))
+    }
+  }
 
   useEffect(() => {
     try {
@@ -58,6 +73,7 @@ export const Profile = ({ userData, userSession, handleSignOut }) => {
       }
       Promise.all(promises).then(() => {
         setNFTs(temp)
+        setSearchedNFTs(temp)
       })
     }
   }, [check])
@@ -79,7 +95,8 @@ export const Profile = ({ userData, userSession, handleSignOut }) => {
 
         }}> {CHAIN_TYPE === "testnet" ? person._profile.stxAddress.testnet : person._profile.stxAddress.mainnet} </button></>}
         <input className='searchbar' type="text" placeholder='Search transactions' value={searchText} onChange={(e) => {
-          setSearchText(e.target.value)
+          setSearchText(e.target.value);
+          fuzzySearch(e.target.value)
         }} />
         <div>
           <button className='reveal-btn' disabled>STX Balance: {stx}</button>
@@ -109,7 +126,34 @@ export const Profile = ({ userData, userSession, handleSignOut }) => {
             </div>
           </div>
 
-        </>)}</> : <></>}
+        </>)}</> : <><svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 100 100"
+          xmlSpace="preserve"
+          height="8rem"
+        >
+          <circle
+            fill="none"
+            stroke="#000"
+            strokeWidth={4}
+            cx={50}
+            cy={50}
+            r={44}
+            style={{
+              opacity: 0.5,
+            }}
+          />
+          <circle fill="#fff" stroke="#331d96" strokeWidth={3} cx={8} cy={54} r={6}>
+            <animateTransform
+              attributeName="transform"
+              dur="2s"
+              type="rotate"
+              from="0 50 48"
+              to="360 50 52"
+              repeatCount="indefinite"
+            />
+          </circle>
+        </svg></>}
 
       </div>
     </div>

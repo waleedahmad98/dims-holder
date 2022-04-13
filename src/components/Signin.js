@@ -46,18 +46,15 @@ export const Signin = () => {
       </div>
       <div className='col-6'>
         <div className='d-flex flex-row justify-content-end mt-5 me-5'>
-          <div className='me-5 anchor-text'>
-            Home
-          </div>
-          <div className='me-5 anchor-text'>
-            Stacks
+          <div className='me-5 anchor-text' onClick={() => { window.open("https://www.stacks.co/", "_blank") }}>
+            What is Stacks?
           </div>
           <div className='anchor-text'>
-            About
+            About the Project
           </div>
         </div>
         <div>
-        <BubbleSVG style={{ bottom: 0, right: 0, position: "absolute" }} />
+          <BubbleSVG style={{ bottom: 0, right: 0, position: "absolute" }} />
         </div>
       </div>
 
