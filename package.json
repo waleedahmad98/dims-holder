@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@stacks/common": "^4.0.0",
     "@stacks/connect": "^6.4.0",
     "@stacks/connect-react": "^13.0.0",
+    "@stacks/encryption": "^4.0.0",
     "@stacks/storage": "^3.1.0",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",

@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Storage } from "@stacks/storage";
+import { encryptECIES, decryptECIES } from '@stacks/encryption';
+import { Buffer } from '@stacks/common';
+import { getPublicKeyFromPrivate, makeECPrivateKey } from '@stacks/encryption';
 import {
   Person,
 } from 'blockstack';
@@ -50,7 +53,12 @@ export const Profile = ({ userData, userSession, handleSignOut }) => {
   }, [])
 
   useEffect(() => {
-    axios.get(`https://stacks-node-api.testnet.stacks.co/extended/v1/address/${person._profile.stxAddress.testnet}/assets?unanchored=true`).then((resp) => {
+    let principal = null;
+    if (CHAIN_TYPE === 'testnet')
+      principal = person._profile.stxAddress.testnet
+    else
+      principal = person._profile.stxAddress.mainnet
+    axios.get(`https://stacks-node-api.testnet.stacks.co/extended/v1/address/${principal}/assets?unanchored=true`).then((resp) => {
       const data = resp.data.results
       let temp = []
       for (let i = 0; i < data.length; i = i + 1) {
@@ -59,6 +67,26 @@ export const Profile = ({ userData, userSession, handleSignOut }) => {
       setTxids(temp)
       setCheck(true)
     })
+  }, [])
+
+  // save public key on mongo db
+  useEffect(() => {
+
+    const privateKey = userData.appPrivateKey;
+    const publicKey = getPublicKeyFromPrivate(privateKey);
+    axios.post("http://localhost:8000/api/save", { stxAddress: person._profile.stxAddress.testnet, publicKey: publicKey })
+    // const testString = "haha ok ok"
+
+    // // Encrypt string with public key
+    // const cipherObj = encryptECIES(publicKey, Buffer.from(testString), true).then(r => {
+    //   decryptECIES(privateKey, r).then(r => {
+    //     console.log("deciphered:", r) // i get haha ok ok
+    //   })
+    // });
+
+    // Decrypt the cipher with private key to get the message
+    // const deciphered = decryptECIES(privateKey, cipherObj);
+    // console.log(deciphered);
   }, [])
 
   useEffect(() => {
