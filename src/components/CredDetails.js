@@ -105,6 +105,7 @@ export default function CredDetails(props) {
                                 contentLabel="Example Modal"
                             >
                                 <h2>Hello</h2>
+                                {console.log(access)}
                                 <button onClick={() => { setIsOpen(false) }}>close</button>
                                 <div>I am a modal</div>
                                 <form>
@@ -118,13 +119,18 @@ export default function CredDetails(props) {
 
 
 
-                        </> : <>
-                            <input placeholder='Receiver STACKS Wallet Address' value={shareAddressInput} onChange={(e) => { setShareAddressInput(e.target.value) }} />
-                            <button className='btn1 btn-md me-3' onClick={() => {
-                                shareCredential();
-                            }} >SHARE</button>
+                        </> : <div className='d-flex flex-column align-items-start'>
+                            <input className='searchbar py-2 w-100' placeholder='Receiver STACKS Wallet Address' value={shareAddressInput} onChange={(e) => { setShareAddressInput(e.target.value) }} />
+                            <div className='d-flex flex-row'>
+                                <button className='btn1 btn-md me-3 mt-2' onClick={() => {
+                                    shareCredential();
+                                }} >SHARE</button>
+                                <button className='btn1 btn-md me-3 mt-2' onClick={() => {
+                                    setShareMode(0)
+                                }} >CANCEL</button>
+                            </div>
 
-                        </>}
+                        </div>}
 
 
                     </div>
