@@ -5,29 +5,6 @@ import { signECDSA, verifyECDSA } from '@stacks/encryption';
 import { CHAIN_TYPE } from '../config'
 import Modal from 'react-modal';
 
-const ManageAccessModal = (props) => {
-    return (
-        <>
-            <div class="modal fade" id="manageAccess" tabindex="-1" aria-labelledby="manageAccessLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="manageAccessLabel">Manage Access</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            {console.log(props.access)}
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </>
-    )
-}
-
 export default function CredDetails(props) {
     const [shareMode, setShareMode] = useState(0);
     const [shareAddressInput, setShareAddressInput] = useState('');
@@ -48,6 +25,11 @@ export default function CredDetails(props) {
         localDate = localDate.split(" ")
         return `${localDate[1]} ${localDate[2]} ${localDate[3]} (${localDate[4]})`
     }
+
+    const remove = (item) => {
+        let filteredArr = Object.values(access).filter((el) => el._id !== item._id);
+        setAccess(filteredArr);
+      };
 
     const shareCredential = () => {
         const sigObj = signECDSA(props.privateKey, props.localProps.contract_call.function_args[1].repr.replace('"', "").replace('"', "")); // encrypt hash
@@ -100,21 +82,27 @@ export default function CredDetails(props) {
 
                             <Modal
                                 isOpen={modalIsOpen}
-
                                 onRequestClose={() => { setIsOpen(false) }}
-                                contentLabel="Example Modal"
                             >
-                                <h2>Hello</h2>
-                                {console.log(access)}
-                                <button onClick={() => { setIsOpen(false) }}>close</button>
-                                <div>I am a modal</div>
-                                <form>
-                                    <input />
-                                    <button>tab navigation</button>
-                                    <button>stays</button>
-                                    <button>inside</button>
-                                    <button>the modal</button>
-                                </form>
+
+                                <h2>MANAGE ACCESS</h2>
+                                <div className='d-flex flex-column align-items-center'>
+                                    {access.data !== undefined ? access.data.vc.map(a => <div class="card content-card w-50 mb-5">
+                                        <div class="card-body text-start">
+
+                                            <h5 class="card-title mb-4" style={{ fontWeight: "700" }}><span style={{ fontWeight: "300", fontSize: "medium" }}>Shared with <br /></span>{a.sharedWith}</h5>
+
+                                            <div className='d-flex flex-row'>
+                                                <button className='card-btn me-3 py-3' onClick={() => { window.open(`https://explorer.stacks.co/txid/${a.txid}?chain=${CHAIN_TYPE}`, "_blank") }}>DETAILS</button>
+                                                <button className='card-btn me-3 py-3' onClick={async () => {
+                                                    await axios.delete("http://localhost:8000/api/docs", { headers: {}, data: { "objectid": a._id } })
+                                                    await axios.delete("http://localhost:8000/api/docsvc", { headers: {}, data: { "objectid": a._id } })
+                                                    remove(a)
+                                                }}>REVOKE</button>
+                                            </div>
+                                        </div>
+                                    </div>) : <></>}
+                                </div>
                             </Modal>
 
 
