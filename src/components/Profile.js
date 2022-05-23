@@ -8,6 +8,7 @@ import axios from 'axios';
 import Fuse from 'fuse.js';
 import { BASE_API_URL, CHAIN_TYPE } from '../config';
 import CredDetails from './CredDetails';
+import randomColor from 'randomcolor';
 
 export const Profile = ({ userData, userSession, handleSignOut }) => {
   const person = new Person(userData.profile);
@@ -75,21 +76,9 @@ export const Profile = ({ userData, userSession, handleSignOut }) => {
     const privateKey = userData.appPrivateKey;
     const publicKey = getPublicKeyFromPrivate(privateKey);
 
-    axios.post("http://localhost:8000/api/save", { stxAddress: person._profile.stxAddress.testnet, publicKey: publicKey }).then((r)=>{
+    axios.post("http://localhost:8000/api/save", { stxAddress: person._profile.stxAddress.testnet, publicKey: publicKey }).then((r) => {
       console.log(r);
     })
-    // const testString = "haha ok ok"
-
-    // // Encrypt string with public key
-    // const cipherObj = encryptECIES(publicKey, Buffer.from(testString), true).then(r => {
-    //   decryptECIES(privateKey, r).then(r => {
-    //     console.log("deciphered:", r) // i get haha ok ok
-    //   })
-    // });
-
-    // Decrypt the cipher with private key to get the message
-    // const deciphered = decryptECIES(privateKey, cipherObj);
-    // console.log(deciphered);
   }, [])
 
   useEffect(() => {
@@ -99,10 +88,12 @@ export const Profile = ({ userData, userSession, handleSignOut }) => {
 
       for (let i = 0; i < txids.length; i = i + 1) {
         promises.push(axios.get(`https://stacks-node-api.testnet.stacks.co/extended/v1/tx/${txids[i]}`).then((resp) => {
-          temp.push(resp.data)
+          if (resp.data.tx_type === "contract_call")
+            temp.push(resp.data)
         }))
       }
       Promise.all(promises).then(() => {
+        temp = temp.sort((a, b) => parseFloat(b.burn_block_time) - parseFloat(a.burn_block_time));
         setNFTs(temp)
         setSearchedNFTs(temp)
       })
@@ -136,28 +127,33 @@ export const Profile = ({ userData, userSession, handleSignOut }) => {
             <button type="button" className='btn1 btn-md ms-2' onClick={handleSignOut}> Sign Out</button>
           </div>
         </div>
-        <div className='content-container d-flex flex-column align-items-center'>
+        <div className='container mt-5 d-flex flex-row flex-wrap justify-content-around'>
           {nfts.length !== 0 ? <>{nfts.map(nft => <>
-            <div class="card content-card w-50 mb-5">
+            <div class="card px-4 py-2 content-card mb-5" style={{backgroundColor: randomColor({luminosity: 'dark', hue: 'blue'})}} onClick={() => {
+              setLocalProps(nft);
+            }}>
               <div class="card-body">
-                <div className='d-flex justify-content-between'>
-                  <h5 class="card-title mb-4" style={{ fontWeight: "700" }}>{nft.contract_call !== undefined ? nft.contract_call.function_args[2].repr.replace('"', "").replace('"', "") : <></>}</h5>
+                <div className='d-flex justify-content-between text-start'>
+                  <h2 class="card-title mb-4" style={{ fontWeight: "700" }}>{nft.contract_call !== undefined ? nft.contract_call.function_args[2].repr.replace('"', "").replace('"', "") : <></>}</h2>
                   <div>
                     <div class="card-subtitle mb-4" >{nft.burn_block_time_iso !== undefined ? <>{getDateTime(nft.burn_block_time_iso)}</> : <></>}</div>
                   </div>
                 </div>
-                <h6 class="card-subtitle mb-4">{nft.contract_call !== undefined ? <><span style={{ fontWeight: "600", color: "white" }}>Owner Address: </span>{nft.contract_call.function_args[0].repr}</> : <></>}</h6>
-                <h6 class="card-subtitle mb-4" >{nft.sender_address !== undefined ? <><span style={{ fontWeight: "600", color: "white" }}>Sender Address: </span>{nft.sender_address}</> : <></>}</h6>
+                <hr/>
+                <h6 class="card-subtitle mb-4 text-start">{nft.contract_call !== undefined ? <><span style={{ fontWeight: "800", color: "white" }}>Owned by <br /> </span>{nft.contract_call.function_args[0].repr}</> : <></>}</h6>
+                <h6 class="card-subtitle mb-4 text-start" >{nft.sender_address !== undefined ? <><span style={{ fontWeight: "800", color: "white" }}>Issued by<br /> </span>{nft.sender_address}</> : <></>}</h6>
+                <hr/>
                 <div className='d-flex flex-row'>
-                  <button className='card-btn me-3' onClick={() => { window.open(`https://explorer.stacks.co/txid/${nft.tx_id}?chain=${CHAIN_TYPE}`, "_blank") }}>DETAILS</button>
-                  <button className='card-btn me-3' onClick={() => {
+                  <button className='card-btn me-3 w-50 py-3' onClick={(e) => {
+                    e.stopPropagation()
+                    window.open(`https://explorer.stacks.co/txid/${nft.tx_id}?chain=${CHAIN_TYPE}`, "_blank")
+                  }}>DETAILS</button>
+                  <button className='card-btn me-3 w-50' onClick={(e) => {
+                    e.stopPropagation()
                     window.open(
                       nft.contract_call.function_args[3].repr.replace('"', "").replace('"', ""), "_blank"
                     )
                   }}>PDF</button>
-                  <button className='card-btn' onClick={() => {
-                    setLocalProps(nft);
-                  }}>SHARE</button>
                 </div>
               </div>
             </div>
