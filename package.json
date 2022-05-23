@@ -2,7 +2,6 @@
   "name": "dims-holder",
   "version": "0.1.0",
   "private": true,
-  "proxy":"https://dims-backend.herokuapp.com/",
   "dependencies": {
     "@stacks/common": "^4.0.0",
     "@stacks/connect": "^6.4.0",
