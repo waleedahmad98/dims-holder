@@ -76,7 +76,7 @@ export const Profile = ({ userData, userSession, handleSignOut }) => {
     const privateKey = userData.appPrivateKey;
     const publicKey = getPublicKeyFromPrivate(privateKey);
 
-    axios.post("http://localhost:8000/api/save", { stxAddress: person._profile.stxAddress.testnet, publicKey: publicKey }).then((r) => {
+    axios.post("/api/save", { stxAddress: person._profile.stxAddress.testnet, publicKey: publicKey }).then((r) => {
       console.log(r);
     })
   }, [])

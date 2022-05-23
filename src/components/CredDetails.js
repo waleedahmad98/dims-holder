@@ -13,7 +13,7 @@ export default function CredDetails(props) {
     Modal.setAppElement('#root');
 
     useState(() => {
-        axios.get(`http://localhost:8000/api/docs/${props.localProps.contract_call.function_args[0].repr}`).then(r => {
+        axios.get(`/api/docs/${props.localProps.contract_call.function_args[0].repr}`).then(r => {
             setAccess(r);
         })
     }, [])
@@ -35,7 +35,7 @@ export default function CredDetails(props) {
         const sigObj = signECDSA(props.privateKey, props.localProps.contract_call.function_args[1].repr.replace('"', "").replace('"', "")); // encrypt hash
 
         // send signature to the verifier
-        axios.post("http://localhost:8000/api/share", { sender: props.localProps.contract_call.function_args[0].repr, txid: props.localProps.tx_id, signature: sigObj.signature, rcvr: shareAddressInput }).then((r) => {
+        axios.post("/api/share", { sender: props.localProps.contract_call.function_args[0].repr, txid: props.localProps.tx_id, signature: sigObj.signature, rcvr: shareAddressInput }).then((r) => {
             setShareMode(0);
         })
 
@@ -95,8 +95,8 @@ export default function CredDetails(props) {
                                             <div className='d-flex flex-row'>
                                                 <button className='card-btn me-3 py-3' onClick={() => { window.open(`https://explorer.stacks.co/txid/${a.txid}?chain=${CHAIN_TYPE}`, "_blank") }}>DETAILS</button>
                                                 <button className='card-btn me-3 py-3' onClick={async () => {
-                                                    await axios.delete("http://localhost:8000/api/docs", { headers: {}, data: { "objectid": a._id } })
-                                                    await axios.delete("http://localhost:8000/api/docsvc", { headers: {}, data: { "objectid": a._id } })
+                                                    await axios.delete("/api/docs", { headers: {}, data: { "objectid": a._id } })
+                                                    await axios.delete("/api/docsvc", { headers: {}, data: { "objectid": a._id } })
                                                     remove(a)
                                                 }}>REVOKE</button>
                                             </div>
