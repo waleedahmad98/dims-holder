@@ -28,7 +28,6 @@ export default class App extends Component {
     const authOptions = {
       appDetails: {
         name: "DIMS Holder",
-        icon: window.location.origin + "/favicon.ico",
       },
       redirectTo: "/",
       onFinish: () => {
