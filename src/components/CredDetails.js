@@ -32,8 +32,9 @@ export default function CredDetails(props) {
       };
 
     const shareCredential = () => {
+        console.log(props.privateKey, props.localProps.contract_call.function_args[1].repr.replace('"', "").replace('"', ""))
         const sigObj = signECDSA(props.privateKey, props.localProps.contract_call.function_args[1].repr.replace('"', "").replace('"', "")); // encrypt hash
-
+        
         // send signature to the verifier
         axios.post("https://dims-backend.herokuapp.com/api/share", { sender: props.localProps.contract_call.function_args[0].repr, txid: props.localProps.tx_id, signature: sigObj.signature, rcvr: shareAddressInput }).then((r) => {
             setShareMode(0);

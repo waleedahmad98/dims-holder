@@ -72,7 +72,6 @@ export const Profile = ({ userData, userSession, handleSignOut }) => {
 
   // save public key on mongo db
   useEffect(() => {
-
     const privateKey = userData.appPrivateKey;
     const publicKey = getPublicKeyFromPrivate(privateKey);
 
