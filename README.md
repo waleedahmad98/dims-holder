@@ -8,11 +8,12 @@ The DIMS architecture is made up of three main components:
 <li> VERIFIER </li>
 
 ## DIMS Holder
-The Holder application acts as a simple wallet for your Non-Fungible Token certificates. It also provides the ability to share credentials in a secure way by signing the degrees with your private key which a verifier can verify by decrypting with your public key. 
-https://dims-holder.herokuapp.com
-
+The Holder application acts as a simple wallet for your Non-Fungible Token certificates. It also provides the ability to share credentials in a secure way by signing the degrees with your private key which a verifier can verify by decrypting with your public key.
 ## Architecture
 <img src="https://user-images.githubusercontent.com/60568107/178979150-7485831a-e6e0-4a42-972a-499d995b8001.jpg" />
 
 ## Requirements
 <li>Hiro Wallet Extension and Account</li>
+
+## How To Use
+The deployed version is no longer available so you will have to locally run the application by cloning it and running `npm start` in the root directory.
