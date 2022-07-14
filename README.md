@@ -9,6 +9,7 @@ The DIMS architecture is made up of three main components:
 
 ## DIMS Holder
 The Holder application acts as a simple wallet for your Non-Fungible Token certificates. It also provides the ability to share credentials in a secure way by signing the degrees with your private key which a verifier can verify by decrypting with your public key. 
+https://dims-holder.herokuapp.com
 
 ## Architecture
 <img src="https://user-images.githubusercontent.com/60568107/178979150-7485831a-e6e0-4a42-972a-499d995b8001.jpg" />
